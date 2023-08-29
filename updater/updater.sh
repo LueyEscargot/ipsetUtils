@@ -3,11 +3,9 @@
 WD=$(dirname $0)
 
 ENV_FILE=.env
-HOST_DB_FILE=host.db
-LAST_DADA=.data
+HOST_FILE=host.db
+DATA_FILE=.data
 QUITE=false
-INTERVAL=$(( 600 + $(shuf -i 1-600 -n 1) ))
-TIMEOUT=`echo "$(( ${INTERVAL} * 150 / 100 ))"`
 SETNAME4=host4
 SETNAME6=host6
 TTL=3600
@@ -48,15 +46,13 @@ addr() {
 }
 
 init() {
-  [ -f ${HOST_DB_FILE} ] && . ${WD}/${HOST_DB_FILE}
+  [ -f ${HOST_FILE} ] && . ${WD}/${HOST_FILE}
   [ -f ${ENV_FILE} ] && . ${WD}/${ENV_FILE}
 
   Log "start update hosts' dynamic ip for ipset"
 
-  Log " HOST_DB_FILE: ${HOST_DB_FILE}"
+  Log " HOST_FILE: ${HOST_FILE}"
   Log " SETNAME4: ${SETNAME4}"
-  Log " INTERVAL: ${INTERVAL}"
-  Log " TIMEOUT:  ${TIMEOUT}"
   Log " SETNAME4: ${SETNAME4}"
   Log " SETNAME6: ${SETNAME6}"
   Log " TTL:      ${TTL}"
@@ -78,11 +74,11 @@ init() {
 }
 
 backup() {
-  ipset save > ${WD}/${LAST_DADA}
+  ipset save > ${WD}/${DATA_FILE}
 }
 
 restore() {
-  [ -f ${WD}/${LAST_DADA} ] && `cat ${WD}/${LAST_DADA} | ipset restore`
+  [ -f ${WD}/${DATA_FILE} ] && `cat ${WD}/${DATA_FILE} | ipset restore`
 }
 
 updateIPs() {
