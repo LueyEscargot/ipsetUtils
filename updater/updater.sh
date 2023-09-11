@@ -102,19 +102,17 @@ updateIPs() {
   done
 }
 
-if [ -n "${cmd}" ]; then
-  case "${cmd}" in
-    "backup")
-      echo "backup"
-      backup
-    ;;
-    "restore")
-      echo "restore"
-      restore
-    ;;
-    *)
-      init
-      updateIPs
-    ;;
-  esac
-fi
+case "${cmd}" in
+  "backup")
+    echo "backup"
+    backup
+  ;;
+  "restore")
+    echo "restore"
+    restore
+  ;;
+  *)
+    init
+    updateIPs
+  ;;
+esac

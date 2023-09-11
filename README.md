@@ -12,14 +12,15 @@ updater 用于动态更新主机 IP 地址到 ipset 运行时容器中。
   将需要定时监控、更新的主机名、域名逐一加入其中，如下:
 
   ```db
-  www.cnn.com
-  www.yahoo.com
-  www.namesilo.com
+  DOMAINS="www.yahoo.com"
   ```
 
+  多个域名之间用英文空格分隔。
+
 - ipset 更新脚本: ([update.sh](updater/updater.sh))
-  - ipset 中 ip 容器名暂定为 hostDynamicIpList
-  - IP 数据条目超时时间暂定为扫描间隔（600秒）的 1.5 倍
+  - ipset 中 IPv4 容器名暂定为 host4
+  - ipset 中 IPv6 容器名暂定为 host6
+  - IP 数据条目超时时间由常量 TTL 定义，单位为秒
 
 - iptables 配置
 
@@ -27,6 +28,7 @@ updater 用于动态更新主机 IP 地址到 ipset 运行时容器中。
   - OUTPUT 链中目的地址匹配上则放行。
 
   ```sh
-  iptables -I INPUT 1 -m set --match-set hostDynamicIpList src -j ACCEPT
-  iptables -I OUTPUT 1 -m set --match-set hostDynamicIpList dst -j ACCEPT
+  # IPv4
+  iptables -I INPUT 1 -m set --match-set host4 src -j ACCEPT
+  iptables -I OUTPUT 1 -m set --match-set host4 dst -j ACCEPT
   ```
